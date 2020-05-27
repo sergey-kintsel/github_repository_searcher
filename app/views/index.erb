@@ -1,0 +1,53 @@
+<html lang="en">
+<head>
+  <style>
+    .error {
+      color: red;
+    }
+  </style>
+  <title>Github repository searcher</title>
+</head>
+<body>
+<form action="/" method="get">
+  <label for="query">Repository search query
+    <input type="text" name="query" id="query" value="<%= @query %>">
+  </label>
+  <button type="submit">Search</button>
+</form>
+<% if @query %>
+  <% if @error %>
+    <p class="error"><%= @error %></p>
+  <% elsif @result_items.empty? && @page == 1 %>
+    <p>There are no repositories matching the query</p>
+  <% elsif @result_items.empty? %>
+    <p>No more results for the query</p>
+    <a href="/?query=<%= @query %>&page=<%= @page - 1 %>">Previous</a>
+  <% else %>
+    <% if @page > 1 %>
+      <a href="/?query=<%= @query %>&page=<%= @page - 1 %>">Previous</a>
+    <% end %>
+    <a href="/?query=<%= @query %>&page=<%= @page + 1 %>">Next</a>
+    <table>
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Forks</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @result_items.each do |item| %>
+        <tr>
+          <td>
+            <a href="<%= item['url'] %>"><%= item['full_name'] %></a>
+          </td>
+          <td><%= item['description'] %></td>
+          <td><%= item['forks_count'] %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
+</body>
+</html>
